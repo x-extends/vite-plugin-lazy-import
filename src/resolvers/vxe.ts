@@ -12,8 +12,12 @@ export function VxeResolver (options: VxeResolverOptions): LazyImportResolver {
     esm: opts.esm,
     libraryName: opts.libraryName,
     importStyle: opts.importStyle,
-    resolve ({ dirName }) {
+    resolve ({ name, dirName }) {
       const libPath = `${opts.libraryName}/${opts.esm ? 'es' : 'lib'}`
+      // 兼容老版本
+      if (name === 'VXETable') {
+        dirName = 'v-x-e-table'
+      }
       if (opts.importStyle) {
         return {
           from: {
