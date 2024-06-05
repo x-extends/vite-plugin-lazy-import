@@ -1,5 +1,5 @@
 import { Plugin, FilterPattern } from 'vite'
-import { parse } from 'es-module-lexer'
+import { parse, ExportSpecifier } from 'es-module-lexer'
 import { createFilter } from '@rollup/pluginutils'
 import XEUtils from 'xe-utils'
 
@@ -47,14 +47,13 @@ export function lazyImport (options: LazyImportConfig): Plugin<any> {
     return null
   }
 
-  function transformImport (id:string, syntaxCode: string, resOpts: LazyImportResolver) {
-    const importVariables = syntaxCode.split(',').map(name => name.trim())
+  function transformImport (id:string, exports: readonly ExportSpecifier[], resOpts: LazyImportResolver) {
     const importCodes: string[] = []
-    importVariables.forEach(name => {
-      const asRest = name.match(/([a-zA-Z0-9_]+)\s+as\s+([a-zZ-Z0-9_]+)/)
-      let importName = name
-      if (asRest) {
-        importName = asRest[1]
+    exports.forEach(item => {
+      const importName = item.ln || item.n
+      let variableCode = item.n
+      if (item.ln !== item.n) {
+        variableCode = `${importName} as ${item.n}`
       }
 
       let jsPath = ''
@@ -67,7 +66,7 @@ export function lazyImport (options: LazyImportConfig): Plugin<any> {
         const libDir = resOpts.esm ? 'es' : 'lib'
         const extName = resOpts.importStyle === true ? 'css' : (resOpts.importStyle || 'css')
         const dirName = XEUtils.kebabCase(importName)
-        jsPath = `import { ${name} } from "${resOpts.libraryName}/${libDir}/${dirName}/index.js"`
+        jsPath = `import { ${variableCode} } from "${resOpts.libraryName}/${libDir}/${dirName}/index.js"`
         stylePath = `import "${resOpts.libraryName}/${libDir}/${dirName}/style.${extName}"`
         if (resOpts.resolve) {
           const rest = resOpts.resolve({
@@ -78,10 +77,10 @@ export function lazyImport (options: LazyImportConfig): Plugin<any> {
           const fromRest = rest ? rest.from : null
           if (fromRest) {
             if (XEUtils.isString(fromRest)) {
-              jsPath = `import { ${name} } from "${fromRest}"`
+              jsPath = `import { ${variableCode} } from "${fromRest}"`
             } else {
               if (fromRest.jsPath) {
-                jsPath = `import { ${name} } from "${fromRest.jsPath}"`
+                jsPath = `import { ${variableCode} } from "${fromRest.jsPath}"`
               }
               if (fromRest.stylePath) {
                 stylePath = `import "${fromRest.stylePath}"`
@@ -121,12 +120,11 @@ export function lazyImport (options: LazyImportConfig): Plugin<any> {
         if (!syntaxItem) {
           return
         }
-        const importRE = new RegExp(`^import\\s+\\{(\\s+)?([a-zA-Z0-9,_\\s]+)\\}(\\s+)?from\\s+('|")${resOpts.libraryName}('|")`)
-        const matchRest = restCode.slice(syntaxItem.ss, syntaxItem.se).replace(/\n/g, ' ').match(importRE)
-        if (!matchRest) {
+        const exports = parse(restCode.slice(syntaxItem.ss, syntaxItem.se).replace('import', 'export'))[1]
+        if (!exports.length) {
           return
         }
-        const importCode = transformImport(id, matchRest[2], resOpts)
+        const importCode = transformImport(id, exports, resOpts)
         isTransform = true
         restCode = `${restCode.slice(0, syntaxItem.ss)}${importCode}${restCode.slice(syntaxItem.se)}`
       })

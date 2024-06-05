@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-lazy-import",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Used for vite Lazy import js and style",
   "scripts": {
     "update": "npm install --legacy-peer-deps",
