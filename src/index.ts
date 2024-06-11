@@ -50,10 +50,13 @@ export function lazyImport (options: LazyImportConfig): Plugin<any> {
   function transformImport (id:string, exports: readonly ExportSpecifier[], resOpts: LazyImportResolver) {
     const importCodes: string[] = []
     exports.forEach(item => {
-      const importName = item.ln || item.n
+      let importName = item.n
       let variableCode = item.n
-      if (item.ln !== item.n) {
-        variableCode = `${importName} as ${item.n}`
+      let asName = ''
+      if (item.ln && item.ln !== item.n) {
+        importName = item.ln
+        asName = item.n
+        variableCode = `${importName} as ${asName}`
       }
 
       let jsPath = ''
@@ -102,6 +105,14 @@ export function lazyImport (options: LazyImportConfig): Plugin<any> {
     return importCodes.join(';\n')
   }
 
+  function toVariableExport (impCode: string) {
+    const rest = impCode.replace(/\n/, ' ').match(/\{[a-zA-Z,_'"\s]+?\}/)
+    if (rest) {
+      return `export ${rest[0]}`
+    }
+    return ''
+  }
+
   return {
     name: 'vite:lazy-import',
     enforce: 'post',
@@ -120,7 +131,8 @@ export function lazyImport (options: LazyImportConfig): Plugin<any> {
         if (!syntaxItem) {
           return
         }
-        const exports = parse(restCode.slice(syntaxItem.ss, syntaxItem.se).replace('import', 'export'))[1]
+        const exportCode = toVariableExport(restCode.slice(syntaxItem.ss, syntaxItem.se))
+        const exports = parse(exportCode)[1]
         if (!exports.length) {
           return
         }

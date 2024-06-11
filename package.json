@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-lazy-import",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Used for vite Lazy import js and style",
   "scripts": {
     "update": "npm install --legacy-peer-deps",
@@ -14,9 +14,9 @@
   "module": "./dist/index.mjs",
   "typings": "types/index.d.ts",
   "dependencies": {
-    "rollup": "^4.18.0",
-    "@rollup/pluginutils": "^5.1.0",
-    "es-module-lexer": "^1.5.3"
+    "rollup": "4.18.0",
+    "@rollup/pluginutils": "5.1.0",
+    "es-module-lexer": "1.5.3"
   },
   "devDependencies": {
     "@babel/core": "^7.4.4",
