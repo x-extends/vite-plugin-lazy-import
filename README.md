@@ -113,6 +113,12 @@ import 'vxe-pc-ui/es/vxe-button/style.css'
 //...
 ```
 
+## Contributors
+
+Thank you to everyone who contributed to this project.
+
+[![vite-plugin-lazy-import](https://contrib.rocks/image?repo=x-extends/vite-plugin-lazy-import)](https://github.com/x-extends/vite-plugin-lazy-import/graphs/contributors)
+
 ## License
 
 [MIT](LICENSE) © 2019-present, Xu Liangzhan
