@@ -8,8 +8,10 @@ Used for vite Lazy import js and style.
 npm install vite-plugin-lazy-import -D
 ```
 
+## Usage
+
 ```javascript
-// vite.config.ts
+// vite.config.js
 import { lazyImport } from 'vite-plugin-lazy-import'
 
 export default defineConfig({
@@ -29,36 +31,10 @@ export default defineConfig({
 })
 ```
 
-## Usage
-
-```javascript
-// main.ts
-// ...
-import { VxeUI, VxeButton } from 'vxe-pc-ui'
-//...
-
-VxeUI.setConfig({})
-
-createApp(App).use(VxeButton).mount('#app')
-```
-
-into this
-
-```javascript
-// main.ts
-// ...
-import { VxeUI } from 'vxe-pc-ui/es/vxe-ui/index.js'
-import { VxeButton } from 'vxe-pc-ui/es/vxe-button/index.js'
-//...
-
-VxeUI.setConfig({})
-
-createApp(App).use(VxeButton).mount('#app')
-```
-
 ## Lazy import js
 
 ```javascript
+// vite.config.js
 import { lazyImport } from 'vite-plugin-lazy-import'
 
 lazyImport({
@@ -75,9 +51,26 @@ lazyImport({
 })
 ```
 
+```javascript
+// main.js
+// ...
+import { VxeUI, VxeButton } from 'vxe-pc-ui'
+//...
+```
+
+into this
+
+```javascript
+// ...
+import { VxeUI } from 'vxe-pc-ui/es/vxe-ui/index.js'
+import { VxeButton } from 'vxe-pc-ui/es/vxe-button/index.js'
+//...
+```
+
 ## Lazy import js and css
 
 ```javascript
+// vite.config.js
 import { lazyImport } from 'vite-plugin-lazy-import'
 
 lazyImport({
@@ -96,6 +89,28 @@ lazyImport({
     }
   ]
 })
+```
+
+```javascript
+// main.js
+// ...
+import {
+  VxeUI,
+  VxeButton,
+  Button as VxeButton
+} from 'vxe-pc-ui'
+//...
+```
+
+into this
+
+```javascript
+// ...
+import { VxeUI } from 'vxe-pc-ui/es/vxe-ui/index.js'
+import 'vxe-pc-ui/es/vxe-ui/style.css'
+import { Button as VxeButton } from 'vxe-pc-ui/es/vxe-button/index.js'
+import 'vxe-pc-ui/es/vxe-button/style.css'
+//...
 ```
 
 ## License
