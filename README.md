@@ -96,7 +96,7 @@ lazyImport({
 // ...
 import {
   VxeUI,
-  VxeButton,
+  VxeModal,
   Button as VxeButton
 } from 'vxe-pc-ui'
 //...
@@ -108,8 +108,10 @@ into this
 // ...
 import { VxeUI } from 'vxe-pc-ui/es/vxe-ui/index.js'
 import 'vxe-pc-ui/es/vxe-ui/style.css'
-import { Button as VxeButton } from 'vxe-pc-ui/es/vxe-button/index.js'
-import 'vxe-pc-ui/es/vxe-button/style.css'
+import { VxeModal } from 'vxe-pc-ui/es/vxe-modal/index.js'
+import 'vxe-pc-ui/es/vxe-modal/style.css'
+import { Button as VxeButton } from 'vxe-pc-ui/es/button/index.js'
+import 'vxe-pc-ui/es/button/style.css'
 //...
 ```
 
